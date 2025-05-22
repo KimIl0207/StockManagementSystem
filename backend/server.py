@@ -24,16 +24,16 @@ def save_stock(stock):
     with open(STOCK_FILE, 'w', encoding="utf-8") as f:
         json.dump(stock, f, ensure_ascii=False, indent=4)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 CORS(app)
 
 @app.route('/')
 def serve_index():
-    return send_from_directory('../client/build', 'index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory('../client/build', path)
+    return send_from_directory(app.static_folder, path)
 
 @app.route('/stock', methods=['GET'])
 def get_stock():

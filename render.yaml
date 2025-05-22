@@ -1,9 +1,12 @@
 services:
   - type: web
-    name: stock-app
+    name: stock-management-app
     env: python
-    buildCommand: "cd frontend && npm install && npm run build"
-    startCommand: "python backend/server.py"
+    buildCommand: |
+      cd client
+      npm install
+      npm run build
+    startCommand: python backend/server.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.10
