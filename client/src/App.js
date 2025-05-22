@@ -54,7 +54,7 @@ function App() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch(`${API_BASE_URL}/upload`, {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE}/upload`, {
       method: "POST",
       body: formData,
     });
@@ -62,26 +62,45 @@ function App() {
     const result = await res.json();
     console.log(result);
 
-    if (result.data) {
-      const today = new Date().toISOString().split('T')[0];
+    if (!result.data) return;
 
-      if (Array.isArray(result.data)) {
-        // Excel 데이터인 경우
-        const today = new Date().toISOString().split("T")[0];
-        const newStock = {};
-        for (const item of result.data) {
-          if (item.제품 && item.수량 !== undefined) {
-            // stockList 구조에 맞게 변환
-            newStock[item.제품] = [{ date: today, count: item.수량 }];
-          }
+    const today = new Date().toISOString().split("T")[0];
+
+    // Excel → 변환 및 병합
+    if (Array.isArray(result.data)) {
+      const newStock = {};
+
+      result.data.forEach((item) => {
+        if (!item.제품 || item.수량 === undefined) return;
+
+        const name = item.제품;
+        const newRecord = { date: today, count: item.수량 };
+
+        newStock[name] = newStock[name] || [];
+        newStock[name].push(newRecord);
+      });
+
+      setStockList(prev => {
+        const merged = { ...prev };
+        for (const name in newStock) {
+          merged[name] = [...(merged[name] || []), ...newStock[name]];
         }
-        setStockList(prev => ({ ...prev, ...newStock }));
-      } else if (typeof result.data === 'object') {
-        // JSON 데이터 그대로 반영
-        setStockList(prev => ({ ...prev, ...result.data }));
-      }
+        return merged;
+      });
+    }
+
+    // JSON → 바로 병합
+    else if (typeof result.data === "object") {
+      setStockList(prev => {
+        const merged = { ...prev };
+        for (const name in result.data) {
+          merged[name] = [...(merged[name] || []), ...result.data[name]];
+        }
+        return merged;
+      });
     }
   };
+
 
   const saveToJson = async () => {
     const res = await fetch(`${API_BASE_URL}/save`, {
