@@ -1,8 +1,7 @@
 import { useRef } from "react";
 import PRODUCT_ORDER from "./sortSettings";
 
-function Managestock({ setPage, stockList, setStockList, stock, setStock, updateStock, deleteStock, jsonToExcel }) {
-
+function Managestock({ setPage, stockList, setStockList, stock, setStock, updateStock, deleteStock, jsonToExcel, uploadFile, saveToJson }) {
     const stockName = useRef();
     const stockCount = useRef();
     return (
@@ -40,6 +39,11 @@ function Managestock({ setPage, stockList, setStockList, stock, setStock, update
                     }
                 />
                 <button onClick={() => updateStock(stock.name, stock.count)}>제품 추가</button>
+                <input
+                    type="file"
+                    onChange={(e) => uploadFile(e.target.files[0])}
+                />
+                <button onClick={saveToJson}>JSON으로 저장</button>
                 <table>
                     <thead>
                         <tr>

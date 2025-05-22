@@ -6,6 +6,8 @@ import json
 from datetime import datetime
 
 STOCK_FILE = 'stock.json'
+UPLOAD_FOLDER = './uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def jsonToExcel(file_name):
     with open(file_name, 'r', encoding="utf-8") as f:
@@ -35,11 +37,6 @@ def serve_index():
 def serve_static(path):
     return send_from_directory(app.static_folder, path)
 
-@app.route('/stock', methods=['GET'])
-def get_stock():
-    stock = load_stock()
-    return jsonify(stock), 200
-
 @app.route('/stock', methods=['POST'])
 def update_stock():
     data = request.get_json()
@@ -58,6 +55,45 @@ def update_stock():
     })
     save_stock(stock)
     return jsonify({'message': 'Stock updated successfully'}), 200
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return {'error': 'No file part'}, 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return {'error': 'No selected file'}, 400
+
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
+
+    # 파일 처리
+    if file.filename.endswith('.json'):
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    elif file.filename.endswith(('.xls', '.xlsx')):
+        df = pd.read_excel(filepath)
+        data = df.to_dict(orient='records')
+    else:
+        return {'error': 'Unsupported file type'}, 400
+
+    return {'message': 'File uploaded', 'data': data}, 200
+
+@app.route('/save', methods=['POST'])
+def save_uploaded_stock():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    save_stock(data)
+    return jsonify({'message': 'Saved to stock.json'}), 200
+
+@app.route('/stock', methods=['GET'])
+def get_stock():
+    stock = load_stock()
+    return jsonify(stock), 200
+
 
 @app.route('/stock/<name>', methods=['DELETE'])
 def delete_stock(name):
