@@ -64,23 +64,23 @@ function App() {
 
     if (!result.data) return;
 
-    const today = new Date().toISOString().split("T")[0];
-
-    // Excel → 변환 및 병합
+    // Excel 응답: [ { 재고명, 재고량, 날짜 } ]
     if (Array.isArray(result.data)) {
       const newStock = {};
 
       result.data.forEach((item) => {
-        if (!item.제품 || item.수량 === undefined) return;
+        const name = item.재고명 || item.제품 || item.name;
+        const count = item.재고량 || item.수량 || item.count;
+        const date = item.날짜 || item.date || new Date().toISOString().split("T")[0];
 
-        const name = item.제품;
-        const newRecord = { date: today, count: item.수량 };
+        if (!name || count === undefined) return;
 
-        newStock[name] = newStock[name] || [];
-        newStock[name].push(newRecord);
+        if (!newStock[name]) newStock[name] = [];
+        newStock[name].push({ date, count });
       });
 
-      setStockList(prev => {
+      // 병합 반영
+      setStockList((prev) => {
         const merged = { ...prev };
         for (const name in newStock) {
           merged[name] = [...(merged[name] || []), ...newStock[name]];
@@ -89,9 +89,9 @@ function App() {
       });
     }
 
-    // JSON → 바로 병합
+    // JSON 구조일 경우: 바로 병합
     else if (typeof result.data === "object") {
-      setStockList(prev => {
+      setStockList((prev) => {
         const merged = { ...prev };
         for (const name in result.data) {
           merged[name] = [...(merged[name] || []), ...result.data[name]];
@@ -100,6 +100,7 @@ function App() {
       });
     }
   };
+
 
 
   const saveToJson = async () => {
