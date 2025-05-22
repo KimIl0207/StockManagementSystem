@@ -4,6 +4,13 @@ import PRODUCT_ORDER from "./sortSettings";
 function Managestock({ setPage, stockList, setStockList, stock, setStock, updateStock, deleteStock, jsonToExcel, uploadFile, saveToJson }) {
     const stockName = useRef();
     const stockCount = useRef();
+    const dates = Array.from(
+        new Set(
+            Object.values(stockList)
+                .flat()
+                .map((r) => r.date)
+        )
+    ).sort();
     return (
         <div className="App">
             <div className="header">
