@@ -66,14 +66,18 @@ function App() {
       const today = new Date().toISOString().split('T')[0];
 
       if (Array.isArray(result.data)) {
+        // Excel 데이터인 경우
+        const today = new Date().toISOString().split("T")[0];
         const newStock = {};
         for (const item of result.data) {
           if (item.제품 && item.수량 !== undefined) {
+            // stockList 구조에 맞게 변환
             newStock[item.제품] = [{ date: today, count: item.수량 }];
           }
         }
-        setStockList((prev) => ({ ...prev, ...newStock }));
+        setStockList(prev => ({ ...prev, ...newStock }));
       } else if (typeof result.data === 'object') {
+        // JSON 데이터 그대로 반영
         setStockList(prev => ({ ...prev, ...result.data }));
       }
     }
