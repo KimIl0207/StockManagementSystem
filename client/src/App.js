@@ -67,15 +67,13 @@ function App() {
 
       if (Array.isArray(result.data)) {
         const newStock = {};
-        for (const item of result.data) {
+        result.data.forEach((item) => {
           if (item.제품 && item.수량 !== undefined) {
             newStock[item.제품] = [{ date: today, count: item.수량 }];
           }
-        }
+        });
         setStockList(prev => ({ ...prev, ...newStock }));
-      }
-
-      else if (typeof result.data === 'object') {
+      } else if (typeof result.data === 'object') {
         setStockList(prev => ({ ...prev, ...result.data }));
       }
     }

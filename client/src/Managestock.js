@@ -84,6 +84,12 @@ function Managestock({ setPage, stockList, setStockList, stock, setStock, update
                                         <td key={date}>{recordMap[date] ?? ""}</td>
                                     ))}
                                     <td>
+                                        <span className="editButton" onClick={() => {
+                                            const newCount = prompt(`수정할 ${name}의 수량을 입력하세요:`, recordMap[dates[0]] ?? "");
+                                            if (newCount !== null) {
+                                                updateStock(name, Number(newCount));
+                                            }
+                                        }}>수정</span>
                                         <span className="delButton" onClick={() => deleteStock(name)}>삭제</span>
                                     </td>
                                 </tr>
