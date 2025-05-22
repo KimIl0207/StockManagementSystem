@@ -6,19 +6,21 @@ import Manageproduct from './Manageproduct';
 import Managestock from './Managestock';
 import jsonToExcel from './jsonToExcel';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE || 'http://localhost:5000';
+
 function App() {
   const [stockList, setStockList] = useState({});
   const [stock, setStock] = useState({ name: "", count: 0 });
   const [page, setPage] = useState("home");
 
   useEffect(() => {
-    fetch('http://localhost:5000/stock')
+    fetch(`${API_BASE_URL}/stock`)
       .then(res => res.json())
       .then(data => setStockList(data));
   }, []);
 
   const updateStock = async (name, count) => {
-    const res = await fetch("http://localhost:5000/stock", {
+    const res = await fetch(`${API_BASE_URL}/stock`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -28,14 +30,14 @@ function App() {
     const result = await res.json();
     console.log(result);
 
-    const updatedStockList = await fetch('http://localhost:5000/stock').then(res => res.json());
+    const updatedStockList = await fetch(`${API_BASE_URL}/stock`).then(res => res.json());
     setStockList(updatedStockList);
     setStock({ name: "", count: 0 });
   };
 
   const deleteStock = async (name) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
-    const res = await fetch(`http://localhost:5000/stock/${encodeURIComponent(name)}`, {
+    const res = await fetch(`${API_BASE_URL}/stock/${encodeURIComponent(name)}`, {
       method: "DELETE"
     });
     const result = await res.json();
@@ -52,7 +54,7 @@ function App() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch("https://<render-url>/upload", {
+    const res = await fetch(`${API_BASE_URL}/upload`, {
       method: "POST",
       body: formData,
     });
@@ -80,7 +82,7 @@ function App() {
   };
 
   const saveToJson = async () => {
-    const res = await fetch("https://<render-url>/save", {
+    const res = await fetch(`${API_BASE_URL}/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
