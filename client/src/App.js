@@ -65,9 +65,11 @@ function App() {
     if (!result.data) return;
 
     // Excel 응답: [ { 재고명, 재고량, 날짜 } ]
-    if (Array.isArray(result.data)) {
-      const newStock = {};
+    const isExcel = Array.isArray(result.data);
+    const isJson = typeof result.data === "object" && !isExcel;
 
+    if (isExcel) {
+      const newStock = {};
       result.data.forEach((item) => {
         const name = item.재고명 || item.제품 || item.name;
         const count = item.재고량 || item.수량 || item.count;
@@ -79,7 +81,6 @@ function App() {
         newStock[name].push({ date, count });
       });
 
-      // 병합 반영
       setStockList((prev) => {
         const merged = { ...prev };
         for (const name in newStock) {
@@ -89,8 +90,7 @@ function App() {
       });
     }
 
-    // JSON 구조일 경우: 바로 병합
-    else if (typeof result.data === "object") {
+    if (isJson) {
       setStockList((prev) => {
         const merged = { ...prev };
         for (const name in result.data) {
