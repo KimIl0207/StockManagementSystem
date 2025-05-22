@@ -4,12 +4,6 @@ React + Flask 기반의 웹 애플리케이션으로, 제품 재고를 등록·�
 
 ---
 
-## 🚀 배포 주소
-
-👉 [https://your-render-url.onrender.com](https://your-render-url.onrender.com)
-
----
-
 ## 🧩 기술 스택
 
 - **Frontend**: React (Create React App)
