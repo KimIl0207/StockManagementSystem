@@ -1,0 +1,102 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  scroll-behavior: smooth;
+}
+
+.App {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.body {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.delButton {
+  background-color: #ff4d4d;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+input {
+  width: 200px;
+  padding: 10px;
+  margin: 5px;
+}
+
+button {
+  background-color: #4CAF50;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+  transition: background-color 0.5s ease;
+}
+
+.menuButton {
+  background-color: #008CBA;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+th, td {
+  border: 1px solid #aaa;
+  padding: 6px 10px;
+  text-align: center;
+}
+th {
+  background-color: #f9f9f9;
+}
