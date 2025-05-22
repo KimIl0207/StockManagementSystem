@@ -63,38 +63,50 @@ function Managestock({ setPage, stockList, setStockList, stock, setStock, update
                         </tr>
                     </thead>
                     <tbody>
-                        {PRODUCT_ORDER.filter(name => stockList[name]).map(name => {
-                            const recordMap = {};
-                            stockList[name].forEach(record => {
-                                recordMap[record.date] = record.count;
-                            });
+                        {PRODUCT_ORDER
+                            .filter(name => stockList[name])
+                            .map(name => {
+                                const records = stockList[name];
+                                const recordMap = Object.fromEntries(
+                                    records.map(record => [record.date, record.count])
+                                );
 
-                            const dates = Array.from(
-                                new Set(
-                                    Object.values(stockList).flatMap(records =>
-                                        records.map(record => record.date)
-                                    )
-                                )
-                            ).sort();
+                                return (
+                                    <tr key={name}>
+                                        <td>{name}</td>
+                                        {dates.map((date) => (
+                                            <td
+                                                key={date}
+                                                onClick={() => {
+                                                    const current = recordMap[date] ?? "";
+                                                    const newCount = prompt(`${name} (${date})의 수량을 입력하세요:`, current);
+                                                    if (newCount !== null && !isNaN(newCount)) {
+                                                        const updated = [...records];
+                                                        const index = updated.findIndex(r => r.date === date);
+                                                        if (index !== -1) {
+                                                            updated[index].count = Number(newCount);
+                                                        } else {
+                                                            updated.push({ date, count: Number(newCount) });
+                                                        }
 
-                            return (
-                                <tr key={name}>
-                                    <td>{name}</td>
-                                    {dates.map(date => (
-                                        <td key={date}>{recordMap[date] ?? ""}</td>
-                                    ))}
-                                    <td>
-                                        <span className="editButton" onClick={() => {
-                                            const newCount = prompt(`수정할 ${name}의 수량을 입력하세요:`, recordMap[dates[0]] ?? "");
-                                            if (newCount !== null) {
-                                                updateStock(name, Number(newCount));
-                                            }
-                                        }}>수정</span>
-                                        <span className="delButton" onClick={() => deleteStock(name)}>삭제</span>
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                                                        setStockList(prev => ({
+                                                            ...prev,
+                                                            [name]: updated
+                                                        }));
+                                                    }
+                                                }}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                {recordMap[date] ?? ""}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <span className="delButton" onClick={() => deleteStock(name)}>삭제</span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+
                     </tbody>
                 </table>
 
