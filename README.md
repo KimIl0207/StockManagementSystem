@@ -7,9 +7,10 @@ React + Flask 기반의 웹 애플리케이션으로, 제품 재고를 등록·�
 ## 🧩 기술 스택
 
 - **Frontend**: React (Create React App)
-- **Backend**: Flask (Python)
+- **Backend**: ASP.net (C#)
 - **데이터 저장**: JSON 파일 (`stock.json`)
 - **Excel 지원**: pandas + openpyxl
+- **Server** : Ec2 (변경될 수 있음)
 
 ---
 
@@ -28,7 +29,7 @@ React + Flask 기반의 웹 애플리케이션으로, 제품 재고를 등록·�
 
 ### 💾 재고 저장
 - `JSON에 저장` 버튼 클릭 시 서버에 현재 상태 저장
-- Flask 서버가 `stock.json` 파일로 기록
+- Ec2 서버가 `stock.json` 파일로 기록
 
 ### 📥 Excel 다운로드
 - UI에서 `엑셀로 다운로드` 버튼 클릭 시
